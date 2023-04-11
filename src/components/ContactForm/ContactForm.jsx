@@ -1,13 +1,17 @@
 import shortid from "shortid";
 import { useState } from "react";
 
-import { add as addContact } from 'redux/contactsSlice';
+import { addContact } from "redux/contactsOperations";
 
 import s from './ContactForm.module.css'
+import { useDispatch, useSelector } from "react-redux";
+import { getContacts } from "redux/contactsSelectors";
 
-const ContactForm = ({ onSubmitProp }) => {
+const ContactForm = () => {
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
+    const dispatch = useDispatch();
+    const contacts = useSelector(getContacts);
 
     const handleChange = evt => {
         evt.target.name === 'name' ?
@@ -22,7 +26,12 @@ const ContactForm = ({ onSubmitProp }) => {
 
     const handleSubmit = evt => {
         evt.preventDefault();
-        onSubmitProp(addContact({name, number, id: shortid.generate()}));
+        const found = contacts.contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
+            if (found) {
+            alert(`${name} is already in contacts.`);
+            return;
+            };
+        dispatch(addContact({name, number, id: shortid.generate()}));
         reset();
     };
 

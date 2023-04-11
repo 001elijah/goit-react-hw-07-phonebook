@@ -3,30 +3,59 @@ import { createSlice } from "@reduxjs/toolkit";
 const contactsSlice = createSlice({
     name: 'contacts',
     initialState: {
-        contacts: JSON.parse(localStorage.getItem('contacts')) ?? [],
-        filter: ''
+        items: [],
+        isLoading: false,
+        error: null
     },
     reducers: {
-        add(state, action) {
-            return {
-                ...state,
-                contacts: [...state.contacts, action.payload]
-            }
+        fetchingInProgress(state) {
+            state.isLoading = true;
         },
-        remove(state, action) {
-            return {
-                ...state,
-                contacts: [...state.contacts.filter(contact => contact.id !== action.payload.id)]
-            }
+        fetchingSuccess(state, { payload }) {
+            state.isLoading = false;
+            state.error = null;
+            state.items = payload;
         },
-        filter(state, { payload }) {
-            return {
-                ...state,
-                filter: payload
-            }
+        fetchingError(state, { payload }) {
+            state.isLoading = false;
+            state.error = payload;
+        },
+        addingInProgress(state) {
+           state.isLoading = true; 
+        },
+        addingSuccess(state, { payload }) {
+            state.isLoading = false;
+            state.error = null;
+            state.items.push(payload); //immer under hood
+        },
+        addingError(state, { payload }) {
+            state.isLoading = false;
+            state.error = payload;
+        },
+        removingInProgress(state) {
+           state.isLoading = true; 
+        },
+        removingSuccess(state, { payload }) {
+            state.isLoading = false;
+            state.error = null;
+            state.items = [...state.contacts.filter(contact => contact.id !== payload.id)]; //immer under hood
+        },
+        removingError(state, { payload }) {
+            state.isLoading = false;
+            state.error = payload;
         }
     },
 });
 
-export const { add, remove, filter } = contactsSlice.actions;
+export const {
+    fetchingInProgress,
+    fetchingSuccess,
+    fetchingError,
+    addingInProgress,
+    addingSuccess,
+    addingError,
+    removingInProgress,
+    removingSuccess,
+    removingError
+} = contactsSlice.actions;
 export default contactsSlice.reducer;

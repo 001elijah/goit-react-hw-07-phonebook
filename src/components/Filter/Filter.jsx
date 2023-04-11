@@ -1,15 +1,17 @@
-import { filter as applyFilter } from "redux/contactsSlice";
+import { filter as applyFilter } from 'redux/filterSlice';
 
 import s from './Filter.module.css';
+import { useDispatch } from "react-redux";
 
-const Filter = ({ onChangeProp }) => {
+const Filter = () => {
+    const dispatch = useDispatch();
     return (
         <form className={s.Form}>
             <label htmlFor="">
                 Find contacts by name<br />
                 <input type="text"
                 onChange={evt => {
-                    onChangeProp(applyFilter(evt.target.value))
+                    dispatch(applyFilter(evt.target.value))
                 }}/>
             </label>
         </form>
