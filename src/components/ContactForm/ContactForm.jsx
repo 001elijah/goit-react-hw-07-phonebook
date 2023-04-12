@@ -26,12 +26,7 @@ const ContactForm = () => {
 
     const handleSubmit = evt => {
         evt.preventDefault();
-        const found = contacts.contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
-            if (found) {
-            alert(`${name} is already in contacts.`);
-            return;
-            };
-        dispatch(addContact({name, number, id: shortid.generate()}));
+        dispatch(addContact({contacts, name, number, id: shortid.generate()}));
         reset();
     };
 
